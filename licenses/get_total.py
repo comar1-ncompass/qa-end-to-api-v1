@@ -1,17 +1,15 @@
-from ..setup.auth import authenticate
-from ..setup.config import CONFIG
 import urllib.parse
 import requests
 
-def get_content_by_license(token):
-    """Make protected request to get content by license ID"""
-    query_params = {
-        "licenseid": "d3c25de4-12c8-41e9-a294-300f95e4692f"
-    }
+from setup.auth import authenticate
+from setup.config import CONFIG
+
+# Add the project root to Python path
+
+def get_total(token):
     
-    # Build query string
-    query_string = urllib.parse.urlencode(query_params)
-    url = f"{CONFIG['baseUrl']}/api/content/getcontentbylicenseid?{query_string}"
+    title="Get Total Stats for Licenses"
+    url = f"{CONFIG['baseUrl']}/api/license/gettotal"
     
     headers = {
         "Authorization": f"Bearer {token}",
@@ -23,13 +21,14 @@ def get_content_by_license(token):
         response = requests.get(
             url,
             headers=headers,
-            verify=False  # Disable SSL verification for dev only
+            verify=True  # Disable SSL verification for dev only
         )
         
         # Return both status code and data
         return {
+            "title": title,  # Add title to the result
             "status_code": response.status_code,
-            "data": response.json() if response.status_code == 200 else response.text
+            "data": response.json() if response.status_code == 200 else response.text,
         }
         
     except Exception as e:
@@ -47,9 +46,10 @@ if __name__ == "__main__":
         exit(1)
     
     print("\nMaking API request...")
-    result = get_content_by_license(token)
+    result = get_total(token)
     
     print("\nResults:")
+    print(f"Title: {result.get('title')}")
     print(f"Status Code: {result.get('status_code')}")
     print(f"\nResults: {result}")
     

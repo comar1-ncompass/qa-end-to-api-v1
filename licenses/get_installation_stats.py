@@ -3,9 +3,7 @@ import urllib.parse
 import requests
 from pathlib import Path
 
-sys.path.append(str(Path(__file__).parent.parent))
 from setup.auth import authenticate
-sys.path.append(str(Path(__file__).parent.parent))
 from setup.config import CONFIG
 
 # Add the project root to Python path
@@ -19,6 +17,8 @@ def get_installation_stats(token):
     
     # Build query string
     query_string = urllib.parse.urlencode(query_params)
+    
+    title="Get Installation Stats"
     url = f"{CONFIG['baseUrl']}/api/license/getinstallationstats?{query_string}"
     
     headers = {
@@ -31,11 +31,12 @@ def get_installation_stats(token):
         response = requests.get(
             url,
             headers=headers,
-            verify=False  # Disable SSL verification for dev only
+            verify=True  # Disable SSL verification for dev only
         )
         
         # Return both status code and data
         return {
+            "title": title,
             "status_code": response.status_code,
             "data": response.json() if response.status_code == 200 else response.text
         }
@@ -55,9 +56,10 @@ if __name__ == "__main__":
         exit(1)
     
     print("\nMaking API request...")
-    result = get_content_by_license(token)
+    result = get_installation_stats(token)
     
     print("\nResults:")
+    print(f"Title: {result.get('title')}")
     print(f"Status Code: {result.get('status_code')}")
     print(f"\nResults: {result}")
     

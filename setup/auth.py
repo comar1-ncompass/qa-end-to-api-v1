@@ -1,6 +1,6 @@
 # auth.py
 import requests
-from config import CONFIG
+from setup.config import CONFIG
 from typing import Optional
 
 def authenticate() -> Optional[str]:
@@ -27,7 +27,7 @@ def authenticate() -> Optional[str]:
             login_url,
             json=payload,
             headers=headers,
-            verify=False
+            verify=True #false puts out an ssl error
         )
         
         if response.status_code == 200:
