@@ -2,14 +2,17 @@ import click
 
 from licenses.test                      import *  
 from licenses.get_installation_stats    import *  
-from notification                             import get_total as notification 
+
+from notification                       import get_all as notification 
 from dealer                             import get_total as dealer 
+from dealer.fetch_all_sort_total        import fetch_all_sort_total
 from host                               import get_total as host
 from advertiser                         import get_total as advertiser
 from licenses                           import get_total as license
 from feed                               import get_total as feed
 from content                            import get_total as content
 from user                               import get_total as user
+from billing.purchases                  import purchases
 
 #helper functions
 def show_result(result):
@@ -39,7 +42,7 @@ def cli():
     pass
 
 @cli.command()
-def hello4():
+def hello():
     # Add your other API calls here
     print("Hello World!")
 
@@ -54,7 +57,7 @@ def dashboard():
         print("Authentication failed")
         exit(1)
     
-    show_result(notification.get_total(token))
+    show_result(notification.get_all(token))
     show_result(get_installation_stats(token))
     
     show_result(dealer.get_total(token))
@@ -67,6 +70,24 @@ def dashboard():
     show_result(feed.get_total(token))
     show_result(content.get_total(token))
     show_result(user.get_total(token))
+
+
+@cli.command()
+def dealertab():
+    # Add your other API calls here
+    print("Dealer Module")
+    print("\nAuthenticating...")
+    token = authenticate()
+    
+    if not token:
+        print("Authentication failed")
+        exit(1)
+    
+    show_result(notification.get_all(token))
+    show_result(get_installation_stats(token))
+    show_result(dealer.get_total(token))
+    show_result(purchases(token))
+    show_result(fetch_all_sort_total(token))
     
 if __name__ == "__main__":
     cli()

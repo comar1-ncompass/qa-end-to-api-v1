@@ -6,7 +6,7 @@ from setup.config import CONFIG
 
 # Add the project root to Python path
 
-def get_total(token):
+def get_all(token):
     """Make protected request to get content by license ID"""
     query_params = {
         "page": 1,
@@ -16,7 +16,7 @@ def get_total(token):
     # Build query string
     query_string = urllib.parse.urlencode(query_params)
     
-    title="Get Total Stats for Notification by page"
+    title="Get All for Notification by page"
     url = f"{CONFIG['baseUrl']}/api/notification/getall?{query_string}"
     
     headers = {
